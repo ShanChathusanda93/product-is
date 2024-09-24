@@ -66,10 +66,10 @@ jobs:
           exit 1
         fi
         echo ">>> Downloading IS from provided URL..."
-        echo ">>> Provide URL : ${INPUT_URL}"
+        echo ">>> Provide URL : ${INPUT_DOWNLOAD_URL}"
         mkdir downloaded-product-is
         cd downloaded-product-is
-        curl -vLJO -H 'Accept: application/octet-stream' "${INPUT_URL}"
+        curl -vLJO -H 'Accept: application/octet-stream' "${INPUT_DOWNLOAD_URL}"
         echo ">>> Downloading completed..."
 
         zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
