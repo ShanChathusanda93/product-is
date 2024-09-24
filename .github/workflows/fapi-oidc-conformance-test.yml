@@ -113,7 +113,7 @@ jobs:
 
         cp "$zip_file" ./../../
         echo "Listing files in root:"
-          ls -R
+          ls -l $zip_file
         cd ../..
         ls
         echo ">>> Remove downloaded zip file"
@@ -182,7 +182,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
         echo ">>> Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
-        unzip -qq ${PRODUCT_IS_ZIP}
+        unzip -v ${PRODUCT_IS_ZIP}
 
         PRODUCT_IS=$(find ./ -maxdepth 1 -name 'wso2is*' -type d -printf "%f\n")
 
