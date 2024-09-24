@@ -76,11 +76,16 @@ jobs:
           echo "Error: INPUT_URL is not provided or empty!"
           exit 1
         fi
+        FILE_ID=$(echo "$INPUT_URL" | sed -n 's|.*file/d/\([^/]*\).*|\1|p')
+        echo ">>> File id : $FILE_ID"
+        CONFIRM=$(curl -sc /tmp/gcookie "https://drive.google.com/uc?export=download&id=$FILE_ID" | \
+              sed -rn 's/.*confirm=([^&]+).*/\1/p')
+        
         echo ">>> Downloading IS from provided URL..."
         echo ">>> Provide URL : $INPUT_URL"
         mkdir downloaded-product-is
         cd downloaded-product-is
-        curl -vLJO wso2is-7.0.1-SNAPSHOT.zip -H 'Accept: application/octet-stream' "$INPUT_URL"
+        curl -vLJO wso2is-7.0.1-SNAPSHOT.zip -H 'Accept: application/octet-stream' "https://drive.google.com/uc?export=download&confirm=$CONFIRM&id=$FILE_ID"
         echo ">>> Downloading completed..."
 
         echo "Listing files:"
