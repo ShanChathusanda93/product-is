@@ -62,8 +62,28 @@ jobs:
         INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
         echo ">>> Downloading IS from provided URL..."
+        mkdir downloaded-product-is
+        cd downloaded-product-is
         curl -vLJO -H 'Accept: application/octet-stream' "${INPUT_URL}"
         echo ">>> Downloading completed..."
+
+        zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
+
+        if [[ -z "$zip_file" ]]; then
+          echo "Zip file not found"
+          exit 1
+        fi
+
+        echo ">>> Zip file found: $zip_file"
+        echo ">>> Copying zip file to the root directory ..."
+
+        cp "$zip_file" ./../../
+        cd ../..
+        ls
+        echo ">>> Remove downloaded zip file"
+        rm -rf downloaded-product-is
+        ls
+        
         # if [[ -z "${INPUT_TAG}" ]]; then
         #   echo ">>> Building IS from source..."
         #   mkdir cloned-product-is
