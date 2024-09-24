@@ -60,6 +60,14 @@ jobs:
     - name: Print the INPUT_URL
       run: | 
         echo "Debug: Provided URL is: ${{ inputs.download-url }}"
+    - name: Delete folder if it exists
+      run: |
+        if [ -d "downloaded-product-is" ]; then
+          echo "Deleting folder..."
+          rm -rf downloaded-product-is
+        else
+          echo "Folder does not exist."
+        fi
     - name: Get IS zip
       run: |
         INPUT_URL="${{ inputs.download-url }}"
