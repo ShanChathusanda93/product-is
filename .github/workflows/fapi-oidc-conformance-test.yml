@@ -95,28 +95,28 @@ jobs:
           rm -rf cloned-product-is
           ls
         else
-          if [[ -z "${INPUT_URL}" ]]; then
-            owner="wso2"
-            repo="product-is"
-            if [[ -z "${INPUT_TAG}" ]]; then
-              tag=${GITHUB_REF:10}
-              tag_trimmed=${tag// }
-            else
-              tag=${{github.event.inputs.tag}}
-              tag_trimmed=${tag// }
-            fi
+          # if [[ -z "${INPUT_URL}" ]]; then
+          #   owner="wso2"
+          #   repo="product-is"
+          #   if [[ -z "${INPUT_TAG}" ]]; then
+          #     tag=${GITHUB_REF:10}
+          #     tag_trimmed=${tag// }
+          #   else
+          #     tag=${{github.event.inputs.tag}}
+          #     tag_trimmed=${tag// }
+          #   fi
   
-            artifact="wso2is-${tag_trimmed:1}.zip"
-            echo "Tag=$tag"
-            echo "Artifact=$artifact"
-            list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
-            asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
-            curl -vLJO -H 'Accept: application/octet-stream' \
-              "${asset_url}"
-          else
+          #   artifact="wso2is-${tag_trimmed:1}.zip"
+          #   echo "Tag=$tag"
+          #   echo "Artifact=$artifact"
+          #   list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
+          #   asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
+          #   curl -vLJO -H 'Accept: application/octet-stream' \
+          #     "${asset_url}"
+          # else
             curl -vLJO -H 'Accept: application/octet-stream' \
               "${INPUT_URL}"
-          fi
+          # fi
         fi
 
     - name: Add deployment toml configs to IS
