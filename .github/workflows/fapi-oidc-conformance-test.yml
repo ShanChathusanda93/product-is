@@ -85,7 +85,17 @@ jobs:
         echo ">>> Provide URL : $INPUT_URL"
         mkdir downloaded-product-is
         cd downloaded-product-is
-        curl -vLJO wso2is-7.0.1-SNAPSHOT.zip -H 'Accept: application/octet-stream' "https://drive.google.com/uc?export=download&confirm=$CONFIRM&id=$FILE_ID"
+        # curl -vLJO wso2is-7.0.1-SNAPSHOT.zip -H 'Accept: application/octet-stream' "https://drive.google.com/uc?export=download&confirm=$CONFIRM&id=$FILE_ID"
+        # If the confirmation token is empty, something went wrong
+        if [ -z "$CONFIRM" ]; then
+          echo "No confirmation token received. Trying to download without confirmation..."
+          # Try downloading the file directly
+          curl -Lb /tmp/gcookie -o wso2is-7.0.1-SNAPSHOT.zip "https://drive.google.com/uc?export=download&id=$FILE_ID"
+        else
+          echo "Confirmation token received. Proceeding with download..."
+          # Use the confirmation token to bypass the virus scan warning
+          curl -Lb /tmp/gcookie -o wso2is-7.0.1-SNAPSHOT.zip "https://drive.google.com/uc?export=download&confirm=$CONFIRM&id=$FILE_ID"
+        fi
         echo ">>> Downloading completed..."
 
         echo "Listing files:"
