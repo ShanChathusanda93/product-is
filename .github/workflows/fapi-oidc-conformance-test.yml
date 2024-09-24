@@ -25,7 +25,7 @@ on:
       send-chat:
         description: 'Send test results to google chat'
         required: true
-        default: 'yes'
+        default: 'no'
       download-url:
         description: 'URL to download product-is. If build-IS is true, this will not be used.'
         required: false
@@ -61,40 +61,43 @@ jobs:
       run: |
         INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
-        if [[ -z "${INPUT_TAG}" ]]; then
-          echo ">>> Building IS from source..."
-          mkdir cloned-product-is
-          cd cloned-product-is
-          git clone https://github.com/wso2/product-is
-          cd product-is
-          mvn clean install -Dmaven.test.skip=true | tee mvn-build.log
+        echo ">>> Downloading IS from provided URL..."
+        curl -vLJO -H 'Accept: application/octet-stream' "${INPUT_URL}"
+        echo ">>> Downloading completed..."
+        # if [[ -z "${INPUT_TAG}" ]]; then
+        #   echo ">>> Building IS from source..."
+        #   mkdir cloned-product-is
+        #   cd cloned-product-is
+        #   git clone https://github.com/wso2/product-is
+        #   cd product-is
+        #   mvn clean install -Dmaven.test.skip=true | tee mvn-build.log
 
-          REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-          echo "==========================================================="
-          echo "BUILD $REPO_BUILD_STATUS"
-          echo "=========================================================="
+        #   REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+        #   echo "==========================================================="
+        #   echo "BUILD $REPO_BUILD_STATUS"
+        #   echo "=========================================================="
 
-          if [[ "${REPO_BUILD_STATUS}" != "SUCCESS" ]]; then
-            exit 1
-          fi
+        #   if [[ "${REPO_BUILD_STATUS}" != "SUCCESS" ]]; then
+        #     exit 1
+        #   fi
 
-          zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
+        #   zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
 
-          if [[ -z "$zip_file" ]]; then
-            echo "Zip file not found"
-            exit 1
-          fi
+        #   if [[ -z "$zip_file" ]]; then
+        #     echo "Zip file not found"
+        #     exit 1
+        #   fi
 
-          echo ">>> Zip file found: $zip_file"
-          echo ">>> Copying zip file to the root directory ..."
+        #   echo ">>> Zip file found: $zip_file"
+        #   echo ">>> Copying zip file to the root directory ..."
 
-          cp "$zip_file" ./../../
-          cd ../..
-          ls
-          echo ">>> Remove cloned-product-is directory"
-          rm -rf cloned-product-is
-          ls
-        else
+        #   cp "$zip_file" ./../../
+        #   cd ../..
+        #   ls
+        #   echo ">>> Remove cloned-product-is directory"
+        #   rm -rf cloned-product-is
+        #   ls
+        # else
           # if [[ -z "${INPUT_URL}" ]]; then
           #   owner="wso2"
           #   repo="product-is"
@@ -114,10 +117,10 @@ jobs:
           #   curl -vLJO -H 'Accept: application/octet-stream' \
           #     "${asset_url}"
           # else
-            curl -vLJO -H 'Accept: application/octet-stream' \
-              "${INPUT_URL}"
+            # curl -vLJO -H 'Accept: application/octet-stream' \
+            #   "${INPUT_URL}"
           # fi
-        fi
+        # fi
 
     - name: Add deployment toml configs to IS
       run: |
