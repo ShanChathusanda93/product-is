@@ -57,19 +57,22 @@ jobs:
         curl -vLJO -H 'Accept: application/octet-stream' https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip
         unzip jacoco-0.8.12.zip -d jacoco-0.8.12
 
+    - name: Print the INPUT_URL
+      run: | 
+        echo "Debug: Provided URL is: ${{ inputs.download-url }}"
     - name: Get IS zip
       run: |
-        INPUT_URL=${{  github.event.inputs.download-url  }}
+        INPUT_URL="${{ inputs.download-url }}"
         INPUT_TAG=${{github.event.inputs.tag}}
         if [ -z "$INPUT_URL" ]; then
           echo "Error: INPUT_URL is not provided or empty!"
           exit 1
         fi
         echo ">>> Downloading IS from provided URL..."
-        echo ">>> Provide URL : ${INPUT_URL}"
+        echo ">>> Provide URL : $INPUT_URL"
         mkdir downloaded-product-is
         cd downloaded-product-is
-        curl -vLJO -H 'Accept: application/octet-stream' "${INPUT_URL}"
+        curl -vLJO -H 'Accept: application/octet-stream' "$INPUT_URL"
         echo ">>> Downloading completed..."
 
         zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
