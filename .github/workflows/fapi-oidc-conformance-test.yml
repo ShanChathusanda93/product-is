@@ -83,6 +83,9 @@ jobs:
         curl -vLJO -H 'Accept: application/octet-stream' "$INPUT_URL"
         echo ">>> Downloading completed..."
 
+        echo "Listing files:"
+          ls -R
+        
         zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
 
         if [[ -z "$zip_file" ]]; then
