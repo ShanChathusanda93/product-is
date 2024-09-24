@@ -61,7 +61,7 @@ jobs:
       run: |
         INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
-        if [ -z "$INPUT_URL" ]; then
+        if [ -z "$INPUT_DOWNLOAD_URL" ]; then
           echo "Error: INPUT_URL is not provided or empty!"
           exit 1
         fi
