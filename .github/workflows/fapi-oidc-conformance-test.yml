@@ -86,7 +86,7 @@ jobs:
         echo "Listing files:"
           ls -R
         
-        zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
+        zip_file=$(find . -name 'wso2is-*' -type f -not -name 'wso2is-*-src.zip' -print -quit)
 
         if [[ -z "$zip_file" ]]; then
           echo "Zip file not found"
